@@ -1,0 +1,3341 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <style>
+        #map {
+            width: 1297px;
+            height: 817px;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/Conservationarea_1.js"></script>
+        <script src="data/Nationalpark_2.js"></script>
+        <script src="data/Biotopes_3.js"></script>
+        <script src="data/RecordJaeckel_4.js"></script>
+        <script src="data/RecordZeissler_5.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:false, maxZoom:28, minZoom:1
+        }).fitBounds([[50.83260610508886,13.975851685776012],[51.03693526238132,14.484610557981975]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        // remove popup's row if "visible-with-data"
+        function removeEmptyRowsFromPopupContent(content, feature) {
+         var tempDiv = document.createElement('div');
+         tempDiv.innerHTML = content;
+         var rows = tempDiv.querySelectorAll('tr');
+         for (var i = 0; i < rows.length; i++) {
+             var td = rows[i].querySelector('td.visible-with-data');
+             var key = td ? td.id : '';
+             if (td && td.classList.contains('visible-with-data') && feature.properties[key] == null) {
+                 rows[i].parentNode.removeChild(rows[i]);
+             }
+         }
+         return tempDiv.innerHTML;
+        }
+        // add class to format popup if it contains media
+		function addClassToPopupIfMedia(content, popup) {
+			var tempDiv = document.createElement('div');
+			tempDiv.innerHTML = content;
+			if (tempDiv.querySelector('td img')) {
+				popup._contentNode.classList.add('media');
+					// Delay to force the redraw
+					setTimeout(function() {
+						popup.update();
+					}, 10);
+			} else {
+				popup._contentNode.classList.remove('media');
+			}
+		}
+        var zoomControl = L.control.zoom({
+            position: 'topleft'
+        }).addTo(map);
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_OpenTopoMap_0');
+        map.getPane('pane_OpenTopoMap_0').style.zIndex = 400;
+        var layer_OpenTopoMap_0 = L.tileLayer('https://a.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_OpenTopoMap_0',
+            opacity: 1.0,
+            attribution: '<a href="https://www.openstreetmap.org/copyright">Kartendaten: © OpenStreetMap-Mitwirkende, SRTM | Kartendarstellung: © OpenTopoMap (CC-BY-SA)</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 18
+        });
+        layer_OpenTopoMap_0;
+        map.addLayer(layer_OpenTopoMap_0);
+        function pop_Conservationarea_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Conservationarea_1_0() {
+            return {
+                pane: 'pane_Conservationarea_1',
+                opacity: 1,
+                color: 'rgba(56,128,54,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(77,175,74,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Conservationarea_1');
+        map.getPane('pane_Conservationarea_1').style.zIndex = 401;
+        map.getPane('pane_Conservationarea_1').style['mix-blend-mode'] = 'normal';
+        var layer_Conservationarea_1 = new L.geoJson(json_Conservationarea_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Conservationarea_1',
+            layerName: 'layer_Conservationarea_1',
+            pane: 'pane_Conservationarea_1',
+            onEachFeature: pop_Conservationarea_1,
+            style: style_Conservationarea_1_0,
+        });
+        bounds_group.addLayer(layer_Conservationarea_1);
+        map.addLayer(layer_Conservationarea_1);
+        function pop_Nationalpark_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KATEGORIE'] !== null ? autolinker.link(feature.properties['KATEGORIE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['STATUS'] !== null ? autolinker.link(feature.properties['STATUS'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SG_NR'] !== null ? autolinker.link(feature.properties['SG_NR'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NAME'] !== null ? autolinker.link(feature.properties['NAME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FLAECHE'] !== null ? autolinker.link(feature.properties['FLAECHE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['UMFANG'] !== null ? autolinker.link(feature.properties['UMFANG'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['RVO_DATUM'] !== null ? autolinker.link(feature.properties['RVO_DATUM'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['RVO_1'] !== null ? autolinker.link(feature.properties['RVO_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['RVO_2'] !== null ? autolinker.link(feature.properties['RVO_2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PRAEZI'] !== null ? autolinker.link(feature.properties['PRAEZI'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ERFDAT'] !== null ? autolinker.link(feature.properties['ERFDAT'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['UEBDAT'] !== null ? autolinker.link(feature.properties['UEBDAT'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Nationalpark_2_0() {
+            return {
+                pane: 'pane_Nationalpark_2',
+                opacity: 1,
+                color: 'rgba(160,44,75,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 4.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(133,182,111,0.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Nationalpark_2');
+        map.getPane('pane_Nationalpark_2').style.zIndex = 402;
+        map.getPane('pane_Nationalpark_2').style['mix-blend-mode'] = 'normal';
+        var layer_Nationalpark_2 = new L.geoJson(json_Nationalpark_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Nationalpark_2',
+            layerName: 'layer_Nationalpark_2',
+            pane: 'pane_Nationalpark_2',
+            onEachFeature: pop_Nationalpark_2,
+            style: style_Nationalpark_2_0,
+        });
+        bounds_group.addLayer(layer_Nationalpark_2);
+        map.addLayer(layer_Nationalpark_2);
+        function pop_Biotopes_3(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td class="visible-with-data" id="REPORT"colspan="2"><strong>REPORT</strong><br />' + (feature.properties['REPORT'] !== null ? autolinker.link(feature.properties['REPORT'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Hab_types</strong><br />' + (feature.properties['Hab_types'] !== null ? autolinker.link(feature.properties['Hab_types'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Biotopes_3_0(feature) {
+            switch(String(feature.properties['HC_BEZ'])) {
+                default:
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(170,192,185,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Ahorn-Eschenw. felsiger Schatthänge u. Schluchten':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(12,207,28,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Ahorn-Linden-Schutthaldenwald':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(12,207,28,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Altwasser':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(42,118,205,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Begrad./ausgebaut. Fluss m. naturnah. Elementen':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(14,72,207,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Bergheide':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(234,161,17,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Binsen-, Waldsimsen- und Schachtelhalmsumpf':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(17,46,234,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Bodensaurer  Buchenwald des Tief- und Hügellandes':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(126,207,12,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Bodensaurer Eichen-Mischwald d. Hügel- und Bergl.':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(12,207,28,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Bodensaurer Tannen-Fichten-Buchenwald d. Bergl.':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(12,207,28,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Borstgrasrasen feuchter Standorte':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(224,171,36,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Borstgrasrasen frischer bis trockener Standorte':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(204,209,46,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Botanisch wertvoller Bereich':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(204,167,18,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Eichenwald trockenwarmer Standorte':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(12,207,28,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Erlen- und Eschen-Bachwald d. Berg- u. Hügellandes':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(12,207,28,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Erlen-Eschen-Quellwald':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(12,207,126,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Feldgehölz':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(207,107,227,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Felsbandheide':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(204,209,46,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Großseggenried nährstoffarmer Standorte':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(204,209,46,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Großseggenried nährstoffreicher Standorte':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(204,209,46,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Halbtrockenrasen bodensaurer Standorte':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(204,209,46,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Hochstaudenflur sumpfiger Standorte':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(204,209,46,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Höhle':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(190,138,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Höhlenreiche Altholzinsel':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(234,161,17,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Hohlweg':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(88,207,223,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kalkarme Sickerquelle':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(210,50,181,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kalktuffquelle':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(210,198,105,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kiefernwald trockenwarmer Fels- und Sandstandorte':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(145,175,143,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kleinseggenried basenarmer Standorte':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(76,92,234,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Magere Frischwiese':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(228,240,54,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Mesophiler Buchenwald des Berglandes':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(146,223,87,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Mesophiler Buchenwald des Tief- und Hügellandes':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(54,177,56,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Moorstadium mit Dominanz von Pfeifengras':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(213,224,55,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Nasswiese':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(213,224,55,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Nat. Block-u.Geröllhal. aus bas.arm.Silikatgest.':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(165,81,221,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Nat. Block-u.Geröllhal. aus bas.reich.Silikatgest.':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(184,138,58,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Natürlicher basenarmer Silikatfels':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(166,105,36,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Natürlicher basenreicher Silikatfels':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(165,81,221,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Naturnaher eutropher Teich/Weiher':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(180,206,93,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Naturnaher Fichten-Blockschuttwald':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,120,149,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Naturnaher Fichtenwald des Berglandes':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(237,86,121,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Naturnaher Fichtenwald des Tieflandes':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(158,193,151,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Naturnaher mesotropher Teich/Weiher':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(104,45,233,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Naturnaher sommerkalter Bach (Berglandbach)':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(104,45,233,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Naturnaher sommerwarmer Bach (Tieflandbach)':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(104,45,233,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Naturnaher sommerwarmer Fluss':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(104,45,233,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Naturnahes ausdauerndes nährstoffarmes Kleingew.':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(104,45,233,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Naturnahes ausdauerndes nährstoffreiches Kleingew.':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(104,45,233,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Naturnahes temporäres Kleingewässer':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(104,45,233,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Offene natürliche und naturnahe Felsbildung':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,4,27,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Röhricht mesotropher Gewässer':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(104,45,233,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Seggen- u. binsenreiche Feuchtweiden u. Flutrasen':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,216,36,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sonst. extensiv genutzte Weide frischer Standorte':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,216,36,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sonstige extensiv genutzte Frischwiese':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,216,36,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sonstiger bodensaurer Eichen-Mischwald d. Tiefl.':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(24,223,73,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sonstiger Moorwald':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(45,237,102,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sonstiger naturnaher Kiefernwald':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(211,7,37,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sonstiges artenreiches Feuchtgrünland':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,216,36,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sonstiges extensiv genutztes frisches Grünland':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,216,36,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Staudenflur nährstoffreicher frischer Standorte':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,216,36,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Stieleichen-Hainbuchenwald feuchter Standorte':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(45,237,102,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Strukturreicher Waldbestand':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(86,183,114,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Submontane Goldhafer-Frischwiese':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,216,36,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sumpfwald':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(31,203,31,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Tauch-u. Schwimmblattveg.eutr. Stillgew.':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(31,64,210,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Traubeneichen-Hainbuchenw. mäß. trock. Standorte':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(7,232,19,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Uferstaudenflur':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(19,5,209,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Weichholz-Auwald (Weiden-Auwald)':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(45,237,102,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Weiden-Moor- und Sumpfgebüsch   ':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(104,45,233,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Zwischenmoor des Tieflandes ':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(104,45,233,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Bodensaurer Eichen-Mischwald d. Hügel- und Bergl.':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(12,207,28,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Halbtrockenrasen bodensaurer Standorte':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(204,209,46,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Nat. Block-u.Geröllhal. aus bas.arm.Silikatgest.':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(165,81,221,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Natürlicher basenarmer Silikatfels':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(165,81,221,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Naturnaher Fichten-Blockschuttwald':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(230,120,149,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sonstiger bodensaurer Eichen-Mischwald d. Tiefl.':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(24,223,73,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Stieleichen-Hainbuchenwald feuchter Standorte':
+                    return {
+                pane: 'pane_Biotopes_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(45,237,102,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Biotopes_3');
+        map.getPane('pane_Biotopes_3').style.zIndex = 403;
+        map.getPane('pane_Biotopes_3').style['mix-blend-mode'] = 'normal';
+        var layer_Biotopes_3 = new L.geoJson(json_Biotopes_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Biotopes_3',
+            layerName: 'layer_Biotopes_3',
+            pane: 'pane_Biotopes_3',
+            onEachFeature: pop_Biotopes_3,
+            style: style_Biotopes_3_0,
+        });
+        bounds_group.addLayer(layer_Biotopes_3);
+        map.addLayer(layer_Biotopes_3);
+        function pop_RecordJaeckel_4(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">fname</th>\
+                        <td>' + (feature.properties['fname'] !== null ? autolinker.link(feature.properties['fname'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_RecordJaeckel_4_0(feature) {
+            switch(String(feature.properties['fname'])) {
+                case 'A. agrestis':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'A. circumscriptus JOHNST.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Acanthinula aculeata':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Acme polita HARTM.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Agriolimax agrestis L.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Agriolimax laevis MÜLL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Amalia marginata (Drap.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Ancylus fluviatilis':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Ancylus fluviatilis MÜLL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Anion subfuscus DRAP.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Anodonta piscinalis':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Arianta arbustorum':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Arianta arbustorum L.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Arianta arbustorum picea':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Arion empiricorum ater':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Arion empiricorum brunneus':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Arion hortensis':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Arion intermedius (Norm.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Arion subfuscus (Drap.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Balea perversa':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Balea perversa L.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Bithynia tentaculata':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'C. hortensis MÜLL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Caecilioides acicula (Müll.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Cepaea hortensis (Müll.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Cepaea hortensis FER.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Cepaea hortensis MÜLL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Cepaea nemoralis':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Cepaea nemoralis L.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Cepaea vindobonensis (Pfeiff.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Chilotrema lapicida':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Chilotrema lapicida L.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Clausilia bidentata (Ström)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Cochlicopa lubrica (Müll.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Cochlicopa lubrica MÜLL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Daudebardia rufa (Drap.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Ena montana DRAP.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Euconulus trochiformis MONT.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Eulola fruticum (Müll.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Fruticicola hispida':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Fruticicola hispida L.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Fruticicola sericea (Drap.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Galba truncatula MÜLL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Goniodiscus rolundatus MÜLL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Goniodiscus rotundatus (Müll.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Goniodiscus rotundatus MÜLL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Helicodonta obvolula MÜLL. tot':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Helix pomatia':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Helix pomatia L.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Iphigena ventricosa (Drap.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Isognomostoma holosericum (Stud.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Isognomostoma isognomostoma GMELIN.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Isognomostoma isognostoma (Gmel.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Isognomostona isognomostoma GMEL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'L. biplicata (Mont.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'L. biplicata MONT.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Laciniara biplicata MONT.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Laciniaria biplicata (Mont.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Laciniaria biplicata MONT.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Laciniaria plicata (Drap.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Laciniaria plicata DRAP.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Lehmannia marginata (Müll.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Lehmannia marginata MÜLL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Limax agrestis':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Limax cinereoniger (Wolf.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Limax laevis (Müll.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Limax maximus cinereus (Lister)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Limax maximus L mit Kielstreif':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Limax tenellus':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Limax tenellus (Nilss)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'lphigena plicatula DRAP.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'M. incarnata MÜLL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'M. umbrosa C. f F.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Margaritana margaritifera':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Marpessa laminata (Mont.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Marpessa laminata MONT.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Marpessa orthostoma (Menke)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Monacha incarnata':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Monacha incarnata (Müll.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Monacha incarnata MÜLL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Monacha umbrosa':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Monacha umbrosa (C. Pfeiff.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Monacha umbrosa C. PF.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Paiudina fasciata (Müll.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Phenacolimax pellucidus MÜLL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Polita alliaria (Miller)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Polita cellaria':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Polita cellaria MÜLL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Polita glabra':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Punctum pygmaeum DRAP.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pupilla muscorum':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'R. pura ALD.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Radix ovata DRAP.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Retinella nitidula DRAP.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Rhenacolimax pellucidus (Müll.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Semilimax diaphanus DRAP.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Succinea putris':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Succinea putris L.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Truncatellina minutissima (Hartm.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Unio pictorum':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Unio tumidus':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'V. costata MÜLL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Vallonia costata':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Vallonia pulchella':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Vallonia pulchella MÜLL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Vertigo pusilla (Müll.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Vertigo pygmaea (Drap.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Vitrea crystallina (Müll.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Vitrea crystallina MÜLL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Vitrinopugio kotulae WSTLD.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Zonitoides hammonis (Ström.)':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Zonitoides hammonis STROM.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Zonitoides nitidus MÜLL.':
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_RecordJaeckel_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(241,15,15,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_RecordJaeckel_4');
+        map.getPane('pane_RecordJaeckel_4').style.zIndex = 404;
+        map.getPane('pane_RecordJaeckel_4').style['mix-blend-mode'] = 'normal';
+        var layer_RecordJaeckel_4 = new L.geoJson(json_RecordJaeckel_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_RecordJaeckel_4',
+            layerName: 'layer_RecordJaeckel_4',
+            pane: 'pane_RecordJaeckel_4',
+            onEachFeature: pop_RecordJaeckel_4,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_RecordJaeckel_4_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_RecordJaeckel_4);
+        map.addLayer(layer_RecordJaeckel_4);
+        function pop_RecordZeissler_5(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fname'] !== null ? autolinker.link(feature.properties['fname'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['latitude'] !== null ? autolinker.link(feature.properties['latitude'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['longitude'] !== null ? autolinker.link(feature.properties['longitude'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_RecordZeissler_5_0() {
+            return {
+                pane: 'pane_RecordZeissler_5',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(183,72,75,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_RecordZeissler_5');
+        map.getPane('pane_RecordZeissler_5').style.zIndex = 405;
+        map.getPane('pane_RecordZeissler_5').style['mix-blend-mode'] = 'normal';
+        var layer_RecordZeissler_5 = new L.geoJson(json_RecordZeissler_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_RecordZeissler_5',
+            layerName: 'layer_RecordZeissler_5',
+            pane: 'pane_RecordZeissler_5',
+            onEachFeature: pop_RecordZeissler_5,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_RecordZeissler_5_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_RecordZeissler_5);
+        map.addLayer(layer_RecordZeissler_5);
+        var baseMaps = {};
+        var overlaysTree = [
+        {label: '<b>Snails</b>', selectAllCheckbox: true, children: [
+            {label: '<img src="legend/RecordZeissler_5.png" /> Record Zeissler', layer: layer_RecordZeissler_5},
+            {label: 'Record Jaeckel<br /><table><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Aagrestis0.png" /></td><td>A. agrestis</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_AcircumscriptusJOHNST1.png" /></td><td>A. circumscriptus JOHNST.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Acanthinulaaculeata2.png" /></td><td>Acanthinula aculeata</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_AcmepolitaHARTM3.png" /></td><td>Acme polita HARTM.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_AgriolimaxagrestisL4.png" /></td><td>Agriolimax agrestis L.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_AgriolimaxlaevisMÜLL5.png" /></td><td>Agriolimax laevis MÜLL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_AmaliamarginataDrap6.png" /></td><td>Amalia marginata (Drap.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Ancylusfluviatilis7.png" /></td><td>Ancylus fluviatilis</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_AncylusfluviatilisMÜLL8.png" /></td><td>Ancylus fluviatilis MÜLL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_AnionsubfuscusDRAP9.png" /></td><td>Anion subfuscus DRAP.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Anodontapiscinalis10.png" /></td><td>Anodonta piscinalis</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Ariantaarbustorum11.png" /></td><td>Arianta arbustorum</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_AriantaarbustorumL12.png" /></td><td>Arianta arbustorum L.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Ariantaarbustorumpicea13.png" /></td><td>Arianta arbustorum picea</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Arionempiricorumater14.png" /></td><td>Arion empiricorum ater</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Arionempiricorumbrunneus15.png" /></td><td>Arion empiricorum brunneus</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Arionhortensis16.png" /></td><td>Arion hortensis</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_ArionintermediusNorm17.png" /></td><td>Arion intermedius (Norm.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_ArionsubfuscusDrap18.png" /></td><td>Arion subfuscus (Drap.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Baleaperversa19.png" /></td><td>Balea perversa</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_BaleaperversaL20.png" /></td><td>Balea perversa L.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Bithyniatentaculata21.png" /></td><td>Bithynia tentaculata</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_ChortensisMÜLL22.png" /></td><td>C. hortensis MÜLL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_CaecilioidesaciculaMüll23.png" /></td><td>Caecilioides acicula (Müll.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_CepaeahortensisMüll24.png" /></td><td>Cepaea hortensis (Müll.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_CepaeahortensisFER25.png" /></td><td>Cepaea hortensis FER.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_CepaeahortensisMÜLL26.png" /></td><td>Cepaea hortensis MÜLL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Cepaeanemoralis27.png" /></td><td>Cepaea nemoralis</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_CepaeanemoralisL28.png" /></td><td>Cepaea nemoralis L.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_CepaeavindobonensisPfeiff29.png" /></td><td>Cepaea vindobonensis (Pfeiff.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Chilotremalapicida30.png" /></td><td>Chilotrema lapicida</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_ChilotremalapicidaL31.png" /></td><td>Chilotrema lapicida L.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_ClausiliabidentataStröm32.png" /></td><td>Clausilia bidentata (Ström)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_CochlicopalubricaMüll33.png" /></td><td>Cochlicopa lubrica (Müll.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_CochlicopalubricaMÜLL34.png" /></td><td>Cochlicopa lubrica MÜLL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_DaudebardiarufaDrap35.png" /></td><td>Daudebardia rufa (Drap.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_EnamontanaDRAP36.png" /></td><td>Ena montana DRAP.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_EuconulustrochiformisMONT37.png" /></td><td>Euconulus trochiformis MONT.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_EulolafruticumMüll38.png" /></td><td>Eulola fruticum (Müll.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Fruticicolahispida39.png" /></td><td>Fruticicola hispida</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_FruticicolahispidaL40.png" /></td><td>Fruticicola hispida L.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_FruticicolasericeaDrap41.png" /></td><td>Fruticicola sericea (Drap.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_GalbatruncatulaMÜLL42.png" /></td><td>Galba truncatula MÜLL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_GoniodiscusrolundatusMÜLL43.png" /></td><td>Goniodiscus rolundatus MÜLL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_GoniodiscusrotundatusMüll44.png" /></td><td>Goniodiscus rotundatus (Müll.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_GoniodiscusrotundatusMÜLL45.png" /></td><td>Goniodiscus rotundatus MÜLL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_HelicodontaobvolulaMÜLLtot46.png" /></td><td>Helicodonta obvolula MÜLL. tot</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Helixpomatia47.png" /></td><td>Helix pomatia</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_HelixpomatiaL48.png" /></td><td>Helix pomatia L.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_IphigenaventricosaDrap49.png" /></td><td>Iphigena ventricosa (Drap.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_IsognomostomaholosericumStud50.png" /></td><td>Isognomostoma holosericum (Stud.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_IsognomostomaisognomostomaGMELIN51.png" /></td><td>Isognomostoma isognomostoma GMELIN.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_IsognomostomaisognostomaGmel52.png" /></td><td>Isognomostoma isognostoma (Gmel.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_IsognomostonaisognomostomaGMEL53.png" /></td><td>Isognomostona isognomostoma GMEL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_LbiplicataMont54.png" /></td><td>L. biplicata (Mont.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_LbiplicataMONT55.png" /></td><td>L. biplicata MONT.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_LaciniarabiplicataMONT56.png" /></td><td>Laciniara biplicata MONT.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_LaciniariabiplicataMont57.png" /></td><td>Laciniaria biplicata (Mont.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_LaciniariabiplicataMONT58.png" /></td><td>Laciniaria biplicata MONT.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_LaciniariaplicataDrap59.png" /></td><td>Laciniaria plicata (Drap.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_LaciniariaplicataDRAP60.png" /></td><td>Laciniaria plicata DRAP.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_LehmanniamarginataMüll61.png" /></td><td>Lehmannia marginata (Müll.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_LehmanniamarginataMÜLL62.png" /></td><td>Lehmannia marginata MÜLL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Limaxagrestis63.png" /></td><td>Limax agrestis</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_LimaxcinereonigerWolf64.png" /></td><td>Limax cinereoniger (Wolf.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_LimaxlaevisMüll65.png" /></td><td>Limax laevis (Müll.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_LimaxmaximuscinereusLister66.png" /></td><td>Limax maximus cinereus (Lister)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_LimaxmaximusLmitKielstreif67.png" /></td><td>Limax maximus L mit Kielstreif</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Limaxtenellus68.png" /></td><td>Limax tenellus</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_LimaxtenellusNilss69.png" /></td><td>Limax tenellus (Nilss)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_lphigenaplicatulaDRAP70.png" /></td><td>lphigena plicatula DRAP.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_MincarnataMÜLL71.png" /></td><td>M. incarnata MÜLL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_MumbrosaCfF72.png" /></td><td>M. umbrosa C. f F.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Margaritanamargaritifera73.png" /></td><td>Margaritana margaritifera</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_MarpessalaminataMont74.png" /></td><td>Marpessa laminata (Mont.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_MarpessalaminataMONT75.png" /></td><td>Marpessa laminata MONT.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_MarpessaorthostomaMenke76.png" /></td><td>Marpessa orthostoma (Menke)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Monachaincarnata77.png" /></td><td>Monacha incarnata</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_MonachaincarnataMüll78.png" /></td><td>Monacha incarnata (Müll.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_MonachaincarnataMÜLL79.png" /></td><td>Monacha incarnata MÜLL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Monachaumbrosa80.png" /></td><td>Monacha umbrosa</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_MonachaumbrosaCPfeiff81.png" /></td><td>Monacha umbrosa (C. Pfeiff.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_MonachaumbrosaCPF82.png" /></td><td>Monacha umbrosa C. PF.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_PaiudinafasciataMüll83.png" /></td><td>Paiudina fasciata (Müll.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_PhenacolimaxpellucidusMÜLL84.png" /></td><td>Phenacolimax pellucidus MÜLL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_PolitaalliariaMiller85.png" /></td><td>Polita alliaria (Miller)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Politacellaria86.png" /></td><td>Polita cellaria</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_PolitacellariaMÜLL87.png" /></td><td>Polita cellaria MÜLL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Politaglabra88.png" /></td><td>Polita glabra</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_PunctumpygmaeumDRAP89.png" /></td><td>Punctum pygmaeum DRAP.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Pupillamuscorum90.png" /></td><td>Pupilla muscorum</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_RpuraALD91.png" /></td><td>R. pura ALD.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_RadixovataDRAP92.png" /></td><td>Radix ovata DRAP.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_RetinellanitidulaDRAP93.png" /></td><td>Retinella nitidula DRAP.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_RhenacolimaxpellucidusMüll94.png" /></td><td>Rhenacolimax pellucidus (Müll.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_SemilimaxdiaphanusDRAP95.png" /></td><td>Semilimax diaphanus DRAP.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Succineaputris96.png" /></td><td>Succinea putris</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_SuccineaputrisL97.png" /></td><td>Succinea putris L.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_TruncatellinaminutissimaHartm98.png" /></td><td>Truncatellina minutissima (Hartm.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Uniopictorum99.png" /></td><td>Unio pictorum</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Uniotumidus100.png" /></td><td>Unio tumidus</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_VcostataMÜLL101.png" /></td><td>V. costata MÜLL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Valloniacostata102.png" /></td><td>Vallonia costata</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_Valloniapulchella103.png" /></td><td>Vallonia pulchella</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_ValloniapulchellaMÜLL104.png" /></td><td>Vallonia pulchella MÜLL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_VertigopusillaMüll105.png" /></td><td>Vertigo pusilla (Müll.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_VertigopygmaeaDrap106.png" /></td><td>Vertigo pygmaea (Drap.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_VitreacrystallinaMüll107.png" /></td><td>Vitrea crystallina (Müll.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_VitreacrystallinaMÜLL108.png" /></td><td>Vitrea crystallina MÜLL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_VitrinopugiokotulaeWSTLD109.png" /></td><td>Vitrinopugio kotulae WSTLD.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_ZonitoideshammonisStröm110.png" /></td><td>Zonitoides hammonis (Ström.)</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_ZonitoideshammonisSTROM111.png" /></td><td>Zonitoides hammonis STROM.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_ZonitoidesnitidusMÜLL112.png" /></td><td>Zonitoides nitidus MÜLL.</td></tr><tr><td style="text-align: center;"><img src="legend/RecordJaeckel_4_113.png" /></td><td></td></tr></table>', layer: layer_RecordJaeckel_4},]},
+        {label: '<b>Biotop data</b>', selectAllCheckbox: true, children: [
+            {label: 'Biotopes<br /><table><tr><td style="text-align: center;"><img src="legend/Biotopes_3_0.png" /></td><td></td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Mapleashforestofrockyslopescanyons1.png" /></td><td>Maple ash forest of rocky slopes & canyons</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Maplelindenrockdebrisforest2.png" /></td><td>Maple linden rock debris forest</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Deadstreambranch3.png" /></td><td>Dead stream branch</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Channeledriverwithnaturalelements4.png" /></td><td>Channeled river with natural elements</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Mountainheathland5.png" /></td><td>Mountain heathland</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_JuncaceaScirpusEquisetummire6.png" /></td><td>Juncacea-Scirpus-Equisetum mire</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Soilacidicbeechforestoflowlandandhillcountry7.png" /></td><td>Soil acidic beech forest of lowland and hill country</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Soilacidicoakmixedforestofthehillsandmountains8.png" /></td><td>Soil acidic oak mixed forest of the hills and mountains</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Soilacidicfirsprucebeechforestofthemountainregion9.png" /></td><td>Soil acidic fir-spruce-beech forest of the mountain region</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Nardowmeadowofwetsites10.png" /></td><td>Nardow meadow of wet sites</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Nardowmeadowofmesictodrysites11.png" /></td><td>Nardow meadow of mesic to dry sites</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Botanicallyvaluablearea12.png" /></td><td>Botanically valuable area</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Oakforestofdrywarmsites13.png" /></td><td>Oak forest of dry-warm sites</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_ElderAshRiparianforestofthehillsandmountains14.png" /></td><td>Elder-Ash-Riparian forest of the hills and mountains</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_ElderAshwetlandspringforest15.png" /></td><td>Elder Ash wetland spring forest</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Openfieldwoods16.png" /></td><td>Open field woods</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Rockheathland17.png" /></td><td>Rock heathland</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Largesedgereedofnutrientpoorsites18.png" /></td><td>Large sedge reed of nutrient-poor sites</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Largesedgereedofnutrientrichsites19.png" /></td><td>Large sedge reed of nutrient-rich sites</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Semidrygrasslandofsoilacidicsites20.png" /></td><td>Semi-dry grassland of soil-acidic sites</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Tallherbfringecommunitiesofswampysites21.png" /></td><td>Tall herb fringe communities of swampy sites</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Cave22.png" /></td><td>Cave</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Cavericharearichindeadwood23.png" /></td><td>Cave-rich area rich in deadwood</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Hohlweg24.png" /></td><td>Hohlweg</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Carbonatepoorseepagespring25.png" /></td><td>Carbonate-poor seepage spring</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Carbonaterichspring26.png" /></td><td>Carbonate-rich spring</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Pineforestofdrywarmrockandsandsites27.png" /></td><td>Pine forest of dry-warm rock and sand sites</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Smallsedgereedofbasepoorsites28.png" /></td><td>Small sedge reed of base-poor sites</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Nutrientpoorgraslandofmesicsites29.png" /></td><td>Nutrient-poor grasland of mesic sites</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Mesophilicbeechforestofthemountains30.png" /></td><td>Mesophilic beech forest of the mountains</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Mesophilicbeechforestofthelowlandsandhills31.png" /></td><td>Mesophilic beech forest of the lowlands and hills</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Peatstagewithdominanceofpipegrass32.png" /></td><td>Peat stage with dominance of pipe grass</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Wetmeadow33.png" /></td><td>Wet meadow</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Naturalblockandgravelpitoflowbasesilicaterock34.png" /></td><td>Natural block and gravel pit of low-base silicate rock</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Naturalblockandgravelpitofbaserichsilicaterock35.png" /></td><td>Natural block and gravel pit of base-rich silicate rock</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Naturallowbasesilicaterock36.png" /></td><td>Natural low-base silicate rock</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Naturalbaserichsilicaterock37.png" /></td><td>Natural base-rich silicate rock</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Naturaleutrophicpond38.png" /></td><td>Natural eutrophic pond</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Nearnaturalsprucerockdebrisforest39.png" /></td><td>Near-natural spruce rock debris forest</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Nearnaturalspruceforestofthemountains40.png" /></td><td>Near-natural spruce forest of the mountains</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Nearnaturalspruceforestofthelowland41.png" /></td><td>Near-natural spruce forest of the lowland</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Nearnaturalmesotrophicpond42.png" /></td><td>Near-natural mesotrophic pond</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Nearnaturalsummercoldstreammountains43.png" /></td><td>Near-natural summer-cold stream (mountains)</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Nearnaturalsummerwarmstreamlowland44.png" /></td><td>Near-natural summer-warm stream (lowland)</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Nearnaturalsummerwarmriver45.png" /></td><td>Near-natural summer-warm river</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Nearnaturalperennialnutrientpoorpond46.png" /></td><td>Near-natural, perennial, nutrient-poor pond</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Nearnaturalperennialnutrientrichpond47.png" /></td><td>Near-natural, perennial, nutrient-rich pond</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Nearnaturaltemporarypond48.png" /></td><td>Near-natural temporary pond</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Opennaturalandnearnaturalrock49.png" /></td><td>Open natural and near-natural rock</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Reedofmesotrophicwaters50.png" /></td><td>Reed of mesotrophic waters</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_SedgeandJuncacearichwetpasturesandfloodplains51.png" /></td><td>Sedge and Juncacea-rich wet pastures and floodplains </td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Extensivelyusedpastureofmesicsites52.png" /></td><td>Extensively used pasture of mesic sites</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Extensivelyusedmesicmeadow53.png" /></td><td>Extensively used mesic meadow</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Soilacidicoakmixedforestofthelowlands54.png" /></td><td>Soil acidic oak mixed forest of the lowlands</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Moorforest55.png" /></td><td>Moor forest</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Nearnaturalpineforest56.png" /></td><td>Near-natural pine forest</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Speciesrichwetmeadow57.png" /></td><td>Species-rich wet meadow</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Extensivelyusedmesicgreenland58.png" /></td><td>Extensively used mesic greenland</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Herbfringeatnutrientrichmesicsites59.png" /></td><td>Herb fringe at nutrient-rich mesic sites</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Commonoakhornbeamforestinmoistlocations60.png" /></td><td>Common oak-hornbeam forest in moist locations</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Structurallyrichforeststock61.png" /></td><td>Structurally rich forest stock</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_SubmontaneTrisetummesicmeadow62.png" /></td><td>Submontane Trisetum mesic meadow</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Swampyforest63.png" /></td><td>Swampy forest</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Diveandfloatleafvegetationofeutrophicstandingwaters64.png" /></td><td>Dive and float leaf vegetation of eutrophic standing waters</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Durmastoakhornbeamforestofdrysites65.png" /></td><td>Durmast oak-hornbeam forest of dry sites</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Watersedgeherbfringe66.png" /></td><td>Water`s edge herb fringe</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Willowfloodplainforest67.png" /></td><td>Willow floodplain forest</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Willowbogandswampshrubs68.png" /></td><td>Willow bog and swamp shrubs</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Lowlandmire69.png" /></td><td>Lowland mire</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Soilacidicoakmixedforestofhillsitesandmountains70.png" /></td><td>Soil acidic oak mixed forest of hill sites and mountains</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Drygraslandofsoilacidicsites71.png" /></td><td>Dry grasland of soil acidic sites</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Naturalblockandgravelpitoflowbasesilicaterock72.png" /></td><td>Natural block and gravel pit of low-base silicate rock</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Naturallowbasesilicaterock73.png" /></td><td>Natural low-base silicate rock</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Nearnaturalsprucerockdebrisforest74.png" /></td><td>Near-natural spruce rock debris forest</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Soilacidicoakmixedforestofthelowlands75.png" /></td><td>Soil acidic oak mixed forest of the lowlands</td></tr><tr><td style="text-align: center;"><img src="legend/Biotopes_3_Commonoakhornbeamforestinmoistlocations76.png" /></td><td>Common oak-hornbeam forest in moist locations</td></tr></table>', layer: layer_Biotopes_3},]},
+        {label: '<b>Protected areas</b>', selectAllCheckbox: true, children: [
+            {label: '<img src="legend/Nationalpark_2.png" /> Nationalpark', layer: layer_Nationalpark_2},
+            {label: '<img src="legend/Conservationarea_1.png" /> Conservation area', layer: layer_Conservationarea_1},]},
+        {label: '<b>Base maps</b>', selectAllCheckbox: true, children: [
+            {label: "OpenTopoMap", layer: layer_OpenTopoMap_0},]},]
+        var lay = L.control.layers.tree(null, overlaysTree,{
+            //namedToggle: true,
+            //selectorBack: false,
+            //closedSymbol: '&#8862; &#x1f5c0;',
+            //openedSymbol: '&#8863; &#x1f5c1;',
+            //collapseAll: 'Collapse all',
+            //expandAll: 'Expand all',
+            collapsed: false, 
+        });
+        lay.addTo(map);
+        setBounds();
+        </script>
+    </body>
+</html>
